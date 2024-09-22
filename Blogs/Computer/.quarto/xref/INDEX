@@ -1,0 +1,32 @@
+{
+  "about.qmd": {
+    "about.html": "358e566f"
+  },
+  "posts/welcome/index.qmd": {
+    "index.html": "2b78078c"
+  },
+  "posts/post-with-code/index.qmd": {
+    "index.html": "6352694c"
+  },
+  "index.qmd": {
+    "index.html": "02a76b13"
+  },
+  "posts/Programming/R/R-resource-list/index.qmd": {
+    "index.html": "0e6b39ee"
+  },
+  "posts/Programming/R/r-resource-list/index.qmd": {
+    "index.html": "e0d33260"
+  },
+  "posts/Programming/Git/git_syntax_basics/index.qmd": {
+    "index.html": "94f90c1b"
+  },
+  "posts/Programming/Julia/julia_resource_list/index.qmd": {
+    "index.html": "a5b0b4ef"
+  },
+  "posts/Programming/Julia/julia_syntax_basics/index.qmd": {
+    "index.html": "5d283d98"
+  },
+  "posts/Programming/R/r_resource_list/index.qmd": {
+    "index.html": "f8a2bb3e"
+  }
+}

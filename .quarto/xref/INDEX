@@ -1,0 +1,71 @@
+{
+  "index.qmd": {
+    "index.html": "23169684"
+  },
+  "about.qmd": {
+    "about.html": "01f45f34"
+  },
+  "Blogs/Bioinformatics/posts/bulk RNA-seq/identify_housekeeping_genes/index.qmd": {
+    "index.html": "4d56dc54"
+  },
+  "Blogs/Bioinformatics/posts/bulk RNA-seq/bulk_rna-seq_pseudotime_analysis/index.qmd": {
+    "index.html": "ee10c0f6"
+  },
+  "Blogs/Bioinformatics/about.qmd": {
+    "about.html": "815de89f"
+  },
+  "Blogs/Bioinformatics/index.qmd": {
+    "index.html": "9dbe1f11"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/lorenz_curve_and_gini_index/index.qmd": {
+    "index.html": "ed09f331"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/probability_and_statistics_with_julia/index.qmd": {
+    "index.html": "38653c0b"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/binomial_distribution_approximatrions/index.qmd": {
+    "index.html": "f7df7b64"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/trigonometric_functions/index.qmd": {
+    "index.html": "cd0c04fc"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/statistical_inference_concepts_of_binomial_distribution/index.qmd": {
+    "index.html": "f8ebae95"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/logistic_function/index.qmd": {
+    "index.html": "59df4418"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/probability_and_statistics_misc/index.qmd": {
+    "index.html": "39fd65cd"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/p-p_plot_and_q-q_plot/index.qmd": {
+    "index.html": "9d6e2187"
+  },
+  "Blogs/Mathematics/posts/Probability and Statistics/roc_and_auc/index.qmd": {
+    "index.html": "f52abb02"
+  },
+  "Blogs/Mathematics/about.qmd": {
+    "about.html": "ca095593"
+  },
+  "Blogs/Mathematics/index.qmd": {
+    "index.html": "c536348a"
+  },
+  "Blogs/Computer/posts/Programming/Git/git_syntax_basics/index.qmd": {
+    "index.html": "4a325ea1"
+  },
+  "Blogs/Computer/posts/Programming/Julia/julia_resource_list/index.qmd": {
+    "index.html": "cc6a1294"
+  },
+  "Blogs/Computer/posts/Programming/Julia/julia_syntax_basics/index.qmd": {
+    "index.html": "bac77989"
+  },
+  "Blogs/Computer/posts/Programming/R/r_resource_list/index.qmd": {
+    "index.html": "d93db48d"
+  },
+  "Blogs/Computer/about.qmd": {
+    "about.html": "81606042"
+  },
+  "Blogs/Computer/index.qmd": {
+    "index.html": "b94a4247"
+  }
+}

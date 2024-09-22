@@ -1,0 +1,36 @@
+project:
+  type: website
+
+website:
+  title: "NeuroBorder"
+  repo-url: https://github.com/yr-neurospace/NeuroBorder
+  repo-actions: [edit, source, issue]
+  navbar:
+    tools:
+      - icon: github
+        href: https://github.com/yr-neurospace/NeuroBorder
+    left:
+      - text: "Home"
+        href: "index.qmd"
+      - sidebar:blogs
+      - text: "About"
+        href: "about.qmd"
+
+  sidebar:
+    - id: blogs
+      title: "Blogs"
+      contents:
+        - text: "Computer"
+          href: "Blogs/Computer/index.qmd"
+        - text: "Mathematics"
+          href: "Blogs/Mathematics/index.qmd"
+        - text: "Bioinformatics"
+          href: "Blogs/Bioinformatics/index.qmd"
+
+format:
+  html:
+    theme:
+      light: cerulean
+      dark: slate
+    css: styles.css
+    toc: true

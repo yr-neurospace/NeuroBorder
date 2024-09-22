@@ -1,0 +1,13 @@
+{
+  "listingMap": {
+    "Blogs/Bioinformatics/index.qmd": [
+      "posts"
+    ],
+    "Blogs/Mathematics/index.qmd": [
+      "posts"
+    ],
+    "Blogs/Computer/index.qmd": [
+      "posts"
+    ]
+  }
+}
