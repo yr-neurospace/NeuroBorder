@@ -5000,6 +5000,276 @@ Analysis presented here is just the *one-way ANOVA*, which means that we have on
 
 ### Independence and goodness of fit
 
+In fact, checking for independence is a special type of checking goodness of fit. One question often posed is: **Does the population follow a specific distributional form?**
+
+For checking goodness of fit, it means that we want to know whether a random variable $X$ is distributed as some hypothesized distribution $F_0$ or not (meaning that $X$ may be distributed as any of other distributions). We can set up the hypothesis test as
+
+$$
+H_0: X \sim F_0 \quad \text{vs.} \quad H_1: otherwise
+$$
+
+The hypothesis formulation then partitions this space into $\{F_0\}$ for $H_0$ and all other distributions in $H_1$.
+
+For checking independence, our data must have at least two dismentions, saying $Z = (X, Y)$ (i.e. $Z$ is a vector of two random variables). According to the independence of random variables, we know that $X$ and $Y$ are said to be independent if $f(z) = f(x, y) = f_X(x)f_Y(y)$, where $f(x, y)$ is the joint PDF of $X$ and $Y$, $f_X(x)$ is the marginal PDF of $X$, and $f_Y(y)$ is the marginal PDF of $Y$. Under $H_0$, we know the theoretical marginal distributions of $X$ and $Y$, and then we can conclude their joint PDF via $f(x, y) = f_X(x)f_Y(y)$. This means that we again back to the goodness of fit (i.e. checking whether the random variable $Z$ has the PDF $f(x, y) = f_X(x)f_Y(y)$). In this case, we can set the hypothesis test as
+
+$$
+H_0: X_1 \text{ independent of } X_2 \quad \text{vs.} \quad H_1: X_1 \text{ not independent of } X_2
+$$
+
+This sets the space of $H_0$ as the space of all distributions of independent random variable pairs, and $H_1$ as the complement.
+
+To test the two hypotheses, we have two different hypothesis test methods:
+
+1. *chi-squared test*: used for **goodness of fit of discrete distributions with finite categories** and for **checking indepdendence**.
+
+2. *Kolmogorov-Smirnov test*: used for **goodness of fit for arbitrary distributions**.
+
+In the chi-squared case, the approach involves looking at counts of observations that match disjoint categories $i = 1, ..., M$. For each category $i$, we denote $O_i$ the number of the observations that match category $i$. In addition, for each category, there is also an expected number of observations under $H_0$, which we denote as $E_i$. With these, one can express the test statistic as
+
+$$
+\chi^2 = \sum_{i=1}^{M} \frac{(O_i-E_i)^2}{E_i}
+$$
+
+Under $H_0$, we expect that for each category $i$, both $O_i$ and $E_i$ will be relatively close, and hence it is expected that the sum of relative squared differences, $\chi^2$, will not be too big. Conversely, a large value of $\chi^2$ may indicate that $H_0$ is not plausible. Later, we'll use the test statistic $\chi^2$ to test for both goodness of fit and independence since checking independence is a special type of checking goodness of fit.
+
+In the case of Kolmogorov-Smirnov, a key concept is the Empirical Cumulative Distribution Function (ECDF). For a sample of observations, $x_1, ..., x_n$, the ECDF is
+
+$$
+\hat{F}(x) = \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}\{x_i \le x\}, \quad \text{where } \mathbf{1}\{\cdot\} \text{ is the indicator function}
+$$
+
+The approach of Kolmogorov-Smirnov test is to check the closeness of the ECDF to the CDF hypothesized under $H_0$. This is done via the Kolmogorov-Smirnov statistic
+
+$$
+\tilde{S} = \sup_x |\hat{F}(x) - F_0(x)|
+$$
+
+where $F_0(\cdot)$ is the CDF under $H_0$ and $\sup$ is the supremum over all possible $x$-values. Similar to the case of chi-squared, under $H_0$ it is expected that $\hat{F}(\cdot)$ does not deviate greatly from $F_0(\cdot)$, and hence it is expected that $\tilde{S}$ is not very large.
+
+The key to both the chi-squared and Kolmogorov-Smirnov tests is that under $H_0$ there are tractable known approximations to the distribution of the test statistics of both $\chi^2$ and $\tilde{S}$. Then these approximations allow us to obtain an approximate $p$-value in the standard way via
+
+$$
+p = P(W > u)
+$$
+
+where $W$ denotes a random variable distributed based on the approximate distribution and $u$ is the observed test statistic.
+
+#### Chi-squared test for goodness of fit
+
+Assume that the distribution $F_0$ under $H_0$ can be partitioned into categories $i = 1, ..., M$. With such a partition, having $n$ sample observations, we denote by $E_i$ the expected number of observations satisfying category $i$. These values are theoretically computed. Then, based on observations $x_1, ..., x_n$, we denote by $O_i$ as the number of observations that satisfy category $i$. Note that
+
+$$
+\sum_{i=1}^{M} E_i = n \quad \text{and} \quad \sum_{i=1}^{M} O_i = n
+$$
+
+Now, based on $\{E_i\}$ and $\{O_i\}$, we can calculate the $\chi^2$ test statistic.
+
+It turns out that under $H_0$, the $chi^2$ test statistic approximately follows a chi-squared distribution with $M-1$ degrees of freedom.
+
+```{julia}
+using Distributions, HypothesisTests
+
+# assume under H0 that a die is biased, with the probabilities for each side (1 to 6) given by the following vector p
+p = [0.08, 0.12, 0.2, 0.2, 0.15, 0.25]
+# imagine that the die is rolled n = 60 times, and the following count of outcomes (1 to 6) is observed
+O = [3, 2, 9, 11, 8, 27]
+# the number of categories
+M = length(O)
+# the number of observations
+n = sum(O)
+# the expected count of outcomes (1 to 6) under H_0
+E = n .* p
+
+testStatistic = sum((O .- E) .^ 2 ./ E)
+pVal = ccdf(Chisq(M - 1), testStatistic)
+
+println("Manually calculated test statistic: ", testStatistic)
+println("Manually calculated p-value: ", pVal)
+
+println(ChisqTest(O, p))
+```
+
+#### Chi-squared test for checking independence
+
+Considering the following contingency table:
+
+![](./figures/20240924-161250568_c633fdea-628d-46eb-8448-dc45120f465a.png){.lightbox fig-alt="Click to see a larger version of the image" fig-align="center"}
+
+Now, under $H_0$, we assume that the smoking or non-smoking behavior of the individual is independent of the gender (male or female). To check for this using a chi-squared statistic, we first set up $\{E_i\}$ and $\{O_i\}$ as in the following table:
+
+![](./figures/20240924-161829560_4d9719d4-95b7-46ab-8d4e-dea40b61dc0e.png){.lightbox fig-alt="Click to see a larger version of the image" fig-align="center"}
+
+Here the observed *marginal distribution* over male versus female is based on the proportions $p = (0.402, 0.598)$ and the distribution over smoking versus non-smoking is based on the proportions $q = (0.169, 0.831)$. Then, since independence is assumed under $H_0$, we multiply the marginal probabilities to obtain the expected observation counts
+
+$$
+E_{ij} = np_iq_j
+$$
+
+Now with these values at hand, the chi-squared test statistic can be set as follows:
+
+$$
+\chi^2 = \sum_{i=1}^{m}\sum_{i=1}^{l} \frac{(O_{ij}-E_{ij})^2}{E_{ij}}
+$$
+
+where $m$ and $l$ are the respective dimensions of the contingency table ($m=l=2$ in this case).
+
+It turns out that under $H_0$, the above test statistic is approximately chi-squred distributed with $(m-1)\times(l-1)$ degrees of freedom.
+
+```{julia}
+using Distributions
+
+xObs = [18 132; 45 178]
+rowSums = [sum(xObs[i, :]) for i in 1:2]
+colSums = [sum(xObs[:, j]) for j in 1:2]
+n = sum(xObs)
+
+rowProps = rowSums ./ n
+colProps = colSums ./ n
+
+xExpect = [n * rowProps[i] * colProps[j] for i in 1:2, j in 1:2]
+testStat = sum([(xObs[i, j] - xExpect[i, j])^2 / xExpect[i, j] for i in 1:2, j in 1:2])
+pVal = ccdf(Chisq(1), testStat)
+
+println("Chi-squared value: ", testStat)
+println("p-value: ", pVal)
+```
+
+#### Kolmogorov-Smirnov test
+
+We now consider the Kolmogorov-Smirnov test, which is based on the test statistic $\tilde{S}$.
+
+The approach is based on the fact that under $H_0$, the ECDF $\hat{F}(\cdot)$ is close to the actual CDF $F_0(\cdot)$. Let us dive into more details about why the ECDF converges to the actual CDF as $n \to \infty$:
+
+For every value $x \in R$, the ECDF at that value, $\hat{F}(x)$, is the proportion of the number of observations less than or equal to $x$. Under $H_0$, multiplying the ECDF by $n$ yields a binomial random variable with success probability $F_0(x)$:
+
+$$
+n\hat{F}(x) \sim Binomial(n, F_0(x))
+$$
+
+Hence,
+
+$$
+E[\hat{F}(x)] = F_0(x), \quad Var(\hat{F}(x)) = \frac{F_0(x)(1-F_0(x))}{n}
+$$
+
+Hence, for non-small $n$, the ECDF and CDF should be close since the variance for every value $x$ is of the order $1/n$ and diminishes as $n$ grows.
+
+The formal statement of this, taking $n \to \infty$ and considering all values of $x$ simutaneously, is known as the *Glivenko Cantelli Theorem*.
+
+For finite $n$, the ECDF will not exactly align with the CDF. However, the Kolmogorov-Smirnov test statistic $\tilde{S}$ is useful when it comes to measuring this deviation. This is due to the fact that under $H_0$ the *stochastic process* in the variable $x$
+
+$$
+\sqrt{n}(\hat{F}(x) - F_0(x))
+$$
+
+is approximately identical in probability law to a standard *Brownian Bridge*, $B(\cdot)$, composed with $F_0(x)$. That is, by denoting $\hat{F}(\cdot)$ as the ECDF with $n$ observations, we have that
+
+$$
+\sqrt{n}(\hat{F}(x) - F_0(x)) \stackrel{d}{\approx} B(F_0(x))
+$$
+
+which asymptotically converges to equality in distribution as $n \to \infty$.
+
+Note that a Brownian Bridge, $B(t)$, is a form of a variant of *Brownian motion*, constrained to equal $0$ both at $t = 0$ and $t = 1$. It is a type of *diffusion process*.
+
+Now consider the **supremum** as in the Kolmogorov-Smirnov test statistic $\tilde{S}$. It can be shown that in case where $F_0(\cdot)$ is a **continuous** function (distribtuion), as $n \to \infty$,
+
+$$
+\sqrt{n}\tilde{S} \stackrel{d}{=} \sup_{t \in [0,1]} |B(t)|
+$$
+
+Importantly, notice that the right-hand side does not depend on $F_0(\cdot)$, but rather is the maximal value attained by the absolute value of the Brownian bridge process over the interval $[0,1]$. It then turns out that such a random variable denoted by $K$, has CDF
+
+$$
+F_K(x) = P\left(\sup_{t \in [0,1]} |B(t)| \le x\right) = 1 - 2 \sum_{k=1}^{\infty} (-1)^{k-1} e^{-2k^2x^2} = \frac{\sqrt{2\pi}}{x} \sum_{k=1}^{\infty} e^{-(2k-1)^2\pi^2/(8x^2)}
+$$
+
+This is sometimes called the *Kolmogorov distribution*.
+
+In brief, given $n$ observations, under $H_0$, the $\sqrt{n}$-scaled supremum difference between ECDF and CDF $\tilde{S} = \sup_x |\hat{F}(x) - F_0(x)|$ is distributed as the Kolmogonov distribution, independent of $F_0(\cdot)$.
+
+Thus, to obtain an approximate $p$-value for the Kolmogonov-Smirnov test, we calculate
+
+$$
+p = 1 - F_k(\sqrt{n}\tilde{S})
+$$
+
+We can make a simple validation to see that the distribution of $\sqrt{n}\tilde{S}$ is independent of the actual CDF $F_0(\cdot)$ under $H_0$:
+
+```{julia}
+using Distributions, StatsBase, Random, CairoMakie
+
+Random.seed!(0)
+
+n = 25
+N = 10^4
+xGrid = -10:0.001:10
+kGrid = 0:0.01:5
+dist1, dist2 = Exponential(1), Normal()
+
+function ksStat(dist)
+    d = rand(dist, n)
+    Fhat = ecdf(d)
+    sqrt(n) * maximum(abs.(Fhat.(xGrid) .- cdf.(dist, xGrid)))
+end
+
+kStats1 = [ksStat(dist1) for _ in 1:N]
+kStats2 = [ksStat(dist2) for _ in 1:N]
+
+fig, ax = lines(kGrid, pdf.(Kolmogorov(), kGrid); color=:red, label="Kolmogorov PDF")
+stephist!(ax, kStats1; bins=50, color=:blue, label="KS stat (Exponential)", normalization=:pdf)
+stephist!(ax, kStats2; bins=50, color=:green, label="KS stat (Normal)", normalization=:pdf)
+axislegend(ax)
+ax.xlabel = "K"
+ax.ylabel = "Density"
+fig
+```
+
+In addition, we show how to perform the Kolmogorov-Smirnov test:
+
+```{julia}
+using Random, Distributions, StatsBase, HypothesisTests, CairoMakie
+
+Random.seed!(3)
+
+# the data is actually distributed as a gamma distribution with shape parameter 2 and mean 5
+dist = Gamma(2, 2.5)
+# assume F0 is an exponential distribution with mean 5 under H0
+distH0 = Exponential(5)
+# the number of observations
+n = 100
+# sample n observations from the above gamma distribution
+d = rand(dist, n)
+
+Fhat = ecdf(d)
+diffF(dist, x) = sqrt(n) * (Fhat(x) - cdf(dist, x))
+xGrid = 0:0.001:30
+KSstat = maximum(abs.(diffF.(distH0, xGrid)))
+
+M = 10^5
+KScdf(x) = sqrt(2 * pi) / x * sum([exp(-(2k - 1)^2 * pi^2 / (8 * x^2)) for k in 1:M])
+
+println("Manually calculated KS-statistic: ", KSstat)
+println("p-value calculated via series: ", 1 - KScdf(KSstat))
+println("p-value calculated via Kolmogorov distribution: ", 1 - cdf(Kolmogorov(), KSstat))
+
+println(ApproximateOneSampleKSTest(d, distH0))
+
+# ECDF, actual and postulated CDFs
+fig = Figure(size=(600, 1000))
+ax1 = Axis(fig[1, 1]; xlabel="x", ylabel="Probability")
+lines!(ax1, xGrid, cdf.(dist, xGrid); color=:green, label="CDF under actual distribution")
+lines!(ax1, xGrid, cdf.(distH0, xGrid); color=:red, label="CDF under postulated H0")
+lines!(ax1, xGrid, Fhat.(xGrid); color=:blue, label="ECDF from data")
+axislegend(ax1; position=:rb)
+
+ax2 = Axis(fig[2, 1]; xlabel="t", ylabel="K-S process")
+lines!(ax2, cdf.(dist, xGrid), diffF.(dist, xGrid); color=:blue, label="KS Process under actual distribution")
+lines!(cdf.(distH0, xGrid), diffF.(distH0, xGrid); color=:red, label="KS Process under postualted H0")
+axislegend(ax2; position=:rb)
+fig
+```
+
 #### Testing for an indenpendent sequence
 
 Here, we'll use the *Wald-Wolfowitz runs test* to perform hypothesis testing for checking if a sequence of random variables is i.i.d. (indenpendent and identically distributed).
