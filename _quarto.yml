@@ -3,6 +3,8 @@ project:
 
 website:
   title: "NeuroBorder"
+  page-footer:
+    center: Powered by [Quarto](https://quarto.org)
   repo-url: https://github.com/yr-neurospace/NeuroBorder
   repo-actions: [edit, source, issue]
   navbar:
