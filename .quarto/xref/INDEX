@@ -67,5 +67,17 @@
   },
   "Blogs/Computer/index.qmd": {
     "index.html": "b94a4247"
+  },
+  "Blogs/Computer/posts/OS/Linux/introduction_to_systemd_service/index.qmd": {
+    "index.html": "4b9722f2"
+  },
+  "Blogs/Computer/posts/OS/Windows/configure_mstsc_rdp/index.qmd": {
+    "index.html": "7ead9701"
+  },
+  "Blogs/Computer/posts/Programming/R/compile_and_install_r/index.qmd": {
+    "index.html": "b0f9bdee"
+  },
+  "test/test.qmd": {
+    "test.html": "076ececc"
   }
 }
